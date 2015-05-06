@@ -44,6 +44,12 @@ ______________________________________________
 
 16-Mar-2015 Alexander Grözinger
  ! Startup
+06-May-2015
+ # Sortierung nach Datum unklar: DataTable's Lösung durch einbinden der moment.js Bibliothek. Automatische Erkennung 
+       des deutschen Datumformats hinzugefügt: DD.MM.YYYY
+ # Tabelle in horizontaler Richtung größer als zur Verfügung stehender Platz: Problem behoben indem Tabelle nun 
+       horizontal scrollbar wird sobald der Platz nicht mehr ausreicht.
+       + -> geplant ist eine Funktion um die anzuzeigenden Spalten dynamisch ein- und ausblenden zu können
 
 */
 }//--This is the END
