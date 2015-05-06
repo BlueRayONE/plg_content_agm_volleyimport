@@ -3,7 +3,7 @@
  * @package    volleyImport
  * @subpackage Base
  * @author     Alexander Grözinger {@link http://www.agmedia.de}
- * @author     Created on 16-Mar-2015
+ * @author     Created on 06-May-2015
  * @license    GNU/GPL
  */
 
@@ -148,6 +148,10 @@ class plgContentvolleyImport extends JPlugin
           //Adding jQuery Datatable
           $this->_doc->addCustomTag('<script src="//cdn.datatables.net/1.10.5/js/jquery.dataTables.min.js" type="text/javascript"></script>');
           
+          //Adding DataTable date formatting
+          $this->_doc->addCustomTag('<script src="//cdnjs.cloudflare.com/ajax/libs/moment.js/2.8.4/moment.min.js" type="text/javascript"></script>');
+          $this->_doc->addCustomTag('<script src="//cdn.datatables.net/plug-ins/1.10.7/sorting/datetime-moment.js" type="text/javascript"></script>');
+          
           //JQUERYUI SUPPORT FOR PREDEFINED STYLES
           if($this->_vi_jqueryui_load) {
              $this->_doc->addCustomTag('<script src="//cdn.datatables.net/plug-ins/f2c75b7247b/integration/jqueryui/dataTables.jqueryui.js" type="text/javascript"></script>');
@@ -262,6 +266,7 @@ class plgContentvolleyImport extends JPlugin
              $table->cellpadding = 0;
              $table->cellspacing = 0;
              $table->class = "dataTable compact cell-border";
+             $table->width = "100%";
              
              
              //Tabellenheader aufbauen
@@ -371,6 +376,9 @@ class plgContentvolleyImport extends JPlugin
              
              $this->_doc->addScriptDeclaration('
                 jQuery(document).ready(function(){
+                  
+                   jQuery.fn.dataTable.moment( "DD.MM.YYYY" );
+                
                    jQuery("#vi_table_'.$this->_table_id.'").DataTable({
                        "columnDefs": [{ 
                           "orderable": '.$dt_orderable.', 
@@ -379,6 +387,7 @@ class plgContentvolleyImport extends JPlugin
                        paging: '.$dt_pagination.',
                        searching: '.$dt_searchable.',
                        info: '.$dt_pagination.',
+                       "scrollX": true, //Allow Table to be scrolled horizontally if needed
                        '.$jQueryUI.'
                        dom: \''.$dt_sdom.'\'
                    });  
