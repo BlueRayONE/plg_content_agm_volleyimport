@@ -1,5 +1,8 @@
 # plg_content_agm_volleyImport
 
+## Vorschau
+Hier findet ihr das Plugin mit dem aktuellsten Stand als Vorschau: http://testumgebung.agmedia.de/index.php/volleyimport
+
 ## Update 05.08.2015
 Das Projekt wird eine kleine Richtungsänderung bekommen:
 - Tabellenaufbereitung via jQuery Datatables wird entfallen. Die Filterfunktionen für Tabellen machen das Ganze zu "wirr". Dies habe ich inzwischen von mehrerern Personen unabhängig bestätigt bekommen. Die Tabellenfunktion muss einfach und lesbar bleiben.
