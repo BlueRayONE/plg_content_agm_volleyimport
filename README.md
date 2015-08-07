@@ -1,7 +1,7 @@
 # plg_content_agm_volleyImport
 
 ## Vorschau
-Hier findet ihr das Plugin mit dem aktuellsten Stand als Vorschau: http://testumgebung.agmedia.de/index.php/volleyimport
+Hier findet ihr das Plugin mit dem aktuellsten Stand als Vorschau: http://agmedia.de/index.php/joomla/plugins/volleyimport
 
 ## Update 05.08.2015
 Das Projekt wird eine kleine Richtungsänderung bekommen:
