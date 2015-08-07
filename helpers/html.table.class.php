@@ -5,7 +5,7 @@
  * @package STable
  * @category STable
  * @name STable
- * @version 1.0
+ * @version 1.1 *TBody ergänzt. Alexander Grözinger (www.agmedia.de)
  * @author Shay Anderson 03.11
  */
 final class STable {
@@ -76,6 +76,13 @@ final class STable {
        * @var string $class
        */
       public $class;
+      
+      /**
+       * Table class
+       *
+       * @var string $class
+       */
+      protected $_tbody_class;      
 
       /**
        * Table ID
@@ -145,11 +152,18 @@ final class STable {
       private function _getTbody() {
             $html = null;
 
+            $html .= '<tbody'.$this->_formatAttributeClass($this->_tbody_class).'>';
+            
+            
+            
+
             // add tr(s)
             foreach($this->_tr as $tr) {
                   // add tr and close tr
                   $html .= "{$tr}</tr>" . self::EOF_LINE;
             }
+
+            $html .= '</tbody>';
 
             return $html;
       }
@@ -202,6 +216,23 @@ final class STable {
 
             return $this;
       }
+      
+      /**
+       * Table th rotated setter
+       *
+       * @param mixed $text
+       * @param string $class
+       * @param string $attibutes
+       * @return STable
+       */
+      public function thRotate($text = null, $class = null, $attributes = null) {
+            // add th to current thead
+            $class2 = 'rotate-45 '. $class;
+            $this->_thead[$this->_getNodeId()] .= "<th{$this->_formatAttributeClass($class2)}{$this->_formatAttributes($attributes)}>"
+                  . "<div><span>{$text}</span></div></th>" . self::EOF_LINE;
+
+            return $this;
+      }      
 
       /**
        * Table thead setter
@@ -220,6 +251,18 @@ final class STable {
 
             return $this;
       }
+      
+     /**
+       * Table tbody setter
+       *
+       * @param string $class
+       * @param string $attibutes
+       * @return STable
+       */
+      public function tbody($class = null) {
+            // add thead
+            $this->_tbody_class = $class;
+      }      
 
       /**
        * Table tr setter

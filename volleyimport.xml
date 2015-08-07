@@ -1,88 +1,153 @@
 <?xml version="1.0" encoding="utf-8"?>
 <extension type="plugin" version="3.0" method="upgrade" group="content">
-  <name>Content - volleyImport</name>
-  <creationDate>25-Mar-2015</creationDate>
-  <author>Alexander Grözinger</author>
-  <authorEmail>agr@agmedia.de</authorEmail>
-  <authorUrl>http://www.agmedia.de</authorUrl>
-  <copyright>AGMedia</copyright>
-  <license>http://www.gnu.org/licenses/gpl-2.0.html GNU/GPL</license>
-  <version>0.9.0</version>
-  <description>volleyImport Beschreibung</description>
-  <updateservers>
-    <server name="AGMedia Update Server" type="extension" priority="1"><![CDATA[http://agmedia.de/index.php?option=com_ars&view=update&task=stream&format=xml&id=1]]></server>
-  </updateservers>
-  <files>
-    <folder>fields</folder>
-    <folder>helpers</folder>
-    <folder>language</folder>
-    <folder>libraries</folder>
-    <folder>media</folder>
-    <filename>index.html</filename>
-    <filename>installer.script.php</filename>
-    <filename plugin="volleyimport">volleyimport.php</filename>
-    <filename>volleyimport_CHANGELOG.php</filename>
-  </files>
-  <scriptfile>installer.script.php</scriptfile>
-  <params/>
-  <config>
-    <fields name="params" addfieldpath="/plugins/content/volleyimport/fields">
-      
-      
-    <fieldset name="settings">
-        
-        
-        
-        
-        
-      <field name="vi_title_verband" type="vititle" label="AGM_VI_TITEL_VERBAND"></field><field name="vi_verband" type="list" default="0" label="AGM_VI_LBL_VERBAND" description="AGM_VI_DESC_VERBAND">
-          
-          
-          
-        <option value="0">VLW (Volleyball Landesverband Württemberg)</option><option value="1">TVV (Thüringer Volleyball Verband)</option><option value="2">anderer Verband</option></field><field name="vi_title_verein" type="vititle" label="AGM_VI_TITEL_VEREIN"></field><field name="vi_highlight" type="list" default="1" label="AGM_VI_LBL_HIGHLIGHT" description="AGM_VI_DESC_HIGHLIGHT">
-          
-          
-        <option value="0">JNO</option><option value="1">JYES</option></field><field name="vi_verein" type="text" label="AGM_VI_LBL_VEREIN" description="AGM_VI_DESC_VEREIN"></field></fieldset><fieldset name="styling">
-        
-        
-        
-        
-        
-        
-      <field name="vi_title_datatable" type="vititle" label="AGM_VI_TITEL_DATATABLE"></field><field name="vi_datatable_load" type="list" default="1" label="AGM_VI_LBL_DATATABLE" description="AGM_VI_DESC_DATATABLE">
-          
-          
-        <option value="0">JNO</option><option value="1">JYES</option></field><field name="vi_datatable_ordering" type="list" default="1" label="AGM_VI_LBL_DATATABLE_ORDERING" description="AGM_VI_DESC_DATATABLE_ORDERING">
-          
-          
-        <option value="0">JNO</option><option value="1">JYES</option></field><field name="vi_title_jqueryui" type="vititle" label="AGM_VI_TITEL_STYLING"></field><field name="vi_jqueryui_load" type="list" default="1" label="AGM_VI_LBL_JQUERYUI" description="AGM_VI_DESC_JQUERYUI">
-          
-          
-        <option value="0">JNO</option><option value="1">JYES</option></field><field name="vi_jqueryui_theme" type="list" default="cupertino" label="AGM_VI_LBL_JQUERYUI_THEME" description="AGM_VI_DESC_JQUERYUI_THEME">
-          
-          
-          
-          
-          
-          
-          
-          
-          
-          
-          
-          
-          
-          
-          
-          
-          
-          
-          
-          
-          
-          
-          
-          
-        <option value="black-tie">Black-Tie</option><option value="blitzer">Blitzer</option><option value="cupertino">cupertino</option><option value="dark-hive">dark-hive</option><option value="dot-luv">dot-luv</option><option value="eggplant">eggplant</option><option value="excite-bike">excite-bike</option><option value="flick">flick</option><option value="hot-sneaks">hot-sneaks</option><option value="humanity">humanity</option><option value="le-frog">le-frog</option><option value="mint-choc">mint-choc</option><option value="overcast">overcast</option><option value="pepper-grinder">pepper-grinder</option><option value="redmond">redmond</option><option value="smoothness">smoothness</option><option value="south-street">south-street</option><option value="start">start</option><option value="sunny">sunny</option><option value="swanky-purse">swanky-purse</option><option value="trontastic">trontastic</option><option value="ui-darkness">ui-darkness</option><option value="ui-lightness">ui-lightness</option><option value="vader">vader</option></field></fieldset></fields>
-  </config>
+    <name>Content - volleyImport</name>
+    <creationDate>07-Aug-2015</creationDate>
+    <author>Alexander Grözinger</author>
+    <authorEmail>agr@agmedia.de</authorEmail>
+    <authorUrl>http://www.agmedia.de</authorUrl>
+    <copyright>AGMedia</copyright>
+    <license>http://www.gnu.org/licenses/gpl-2.0.html GNU/GPL</license>
+    <version>0.9.2</version>
+    <description>volleyImport Beschreibung</description>
+    <updateservers>
+        <server name="AGMedia Update Server" type="extension" priority="1">
+            <![CDATA[http://agmedia.de/index.php?option=com_ars&view=update&task=stream&format=xml&id=1]]></server>
+    </updateservers>
+    <files>
+        <folder>fields</folder>
+        <folder>helpers</folder>
+        <folder>language</folder>
+        <folder>libraries</folder>
+        <folder>media</folder>
+        <filename>index.html</filename>
+        <filename>installer.script.php</filename>
+        <filename plugin="volleyimport">volleyimport.php</filename>
+        <filename>volleyimport_CHANGELOG.php</filename>
+    </files>
+    <scriptfile>installer.script.php</scriptfile>
+    <params/>
+    <config>
+        <fields name="params" addfieldpath="/plugins/content/volleyimport/fields">
+            <fieldset name="settings">
+                <field name="vi_title_verband" type="vititle" label="AGM_VI_TITEL_VERBAND"></field>
+                <field name="vi_verband" type="list" default="0" label="AGM_VI_LBL_VERBAND"
+                       description="AGM_VI_DESC_VERBAND">
+                    <option value="0">VLW (Volleyball Landesverband Württemberg)</option>
+                    <option value="1">TVV (Thüringer Volleyball Verband)</option>
+                </field>
+                <field name="vi_title_verein" type="vititle" label="AGM_VI_TITEL_VEREIN"></field>
+                <field name="vi_highlight" type="list" default="1" label="AGM_VI_LBL_HIGHLIGHT"
+                       description="AGM_VI_DESC_HIGHLIGHT">
+                    <option value="0">JNO</option>
+                    <option value="1">JYES</option>
+                </field>
+                <field name="vi_verein" type="text" label="AGM_VI_LBL_VEREIN" description="AGM_VI_DESC_VEREIN"></field>
+            </fieldset>
+            <fieldset name="styling">
+                <field name="vi_title_jqueryui" type="vititle" label="AGM_VI_TITEL_STYLING"></field>
+                <field name="vi_jqueryui_load" type="list" default="1" label="AGM_VI_LBL_JQUERYUI"
+                       description="AGM_VI_DESC_JQUERYUI">
+                    <option value="0">JNO</option>
+                    <option value="1">JYES</option>
+                </field>
+                <field name="vi_jqueryui_theme" type="list" default="cupertino" label="AGM_VI_LBL_JQUERYUI_THEME"
+                       description="AGM_VI_DESC_JQUERYUI_THEME">
+                    <option value="black-tie">Black-Tie</option>
+                    <option value="blitzer">Blitzer</option>
+                    <option value="cupertino">cupertino</option>
+                    <option value="dark-hive">dark-hive</option>
+                    <option value="dot-luv">dot-luv</option>
+                    <option value="eggplant">eggplant</option>
+                    <option value="excite-bike">excite-bike</option>
+                    <option value="flick">flick</option>
+                    <option value="hot-sneaks">hot-sneaks</option>
+                    <option value="humanity">humanity</option>
+                    <option value="le-frog">le-frog</option>
+                    <option value="mint-choc">mint-choc</option>
+                    <option value="overcast">overcast</option>
+                    <option value="pepper-grinder">pepper-grinder</option>
+                    <option value="redmond">redmond</option>
+                    <option value="smoothness">smoothness</option>
+                    <option value="south-street">south-street</option>
+                    <option value="start">start</option>
+                    <option value="sunny">sunny</option>
+                    <option value="swanky-purse">swanky-purse</option>
+                    <option value="trontastic">trontastic</option>
+                    <option value="ui-darkness">ui-darkness</option>
+                    <option value="ui-lightness">ui-lightness</option>
+                    <option value="vader">vader</option>
+                </field>
+                <field name="vi_alternating_rows" type="list" default="1" label="AGM_VI_LBL_ALT_ROWS"
+                       description="AGM_VI_DESC_ALT_ROWS">
+                    <option value="0">JNO</option>
+                    <option value="1">JYES</option>
+                </field>
+            </fieldset>
+            <fieldset name="tabelle">
+                <field name="vi_title_tabelle_spalten" type="vititle" label="AGM_VI_TITEL_TABELLE_SPALTEN"></field>
+                <field name="vi_tabelle_spiele" type="list" default="1" label="AGM_VI_LBL_TABELLE_SPIELE"
+                       description="AGM_VI_DESC_TABELLE_SPIELE">
+                    <option value="0">JNO</option>
+                    <option value="1">JYES</option>
+                </field>
+                <field name="vi_tabelle_siege" type="list" default="1" label="AGM_VI_LBL_TABELLE_SIEGE"
+                       description="AGM_VI_DESC_TABELLE_SIEGE">
+                    <option value="0">JNO</option>
+                    <option value="1">JYES</option>
+                </field>
+                <field name="vi_tabelle_niederlagen" type="list" default="1" label="AGM_VI_LBL_TABELLE_NIEDERLAGEN"
+                       description="AGM_VI_DESC_TABELLE_NIEDERLAGEN">
+                    <option value="0">JNO</option>
+                    <option value="1">JYES</option>
+                </field>
+                <field name="vi_tabelle_siege_niederl_detail" type="list" default="1" label="AGM_VI_LBL_TABELLE_SIEGE_NIEDERL_DETAIL"
+                       description="AGM_VI_DESC_TABELLE_SIEGE_NIEDERL_DETAIL">
+                    <option value="0">AGM_VI_DESC_TABELLE_MODUS_OPTION_MINIMAL</option>
+                    <option value="1">AGM_VI_DESC_TABELLE_MODUS_OPTION_KOMPRIMIERT</option>
+                    <option value="2">AGM_VI_DESC_TABELLE_MODUS_OPTION_MAXIMAL</option>
+                </field>
+                <field name="vi_tabelle_ballquotient" type="list" default="1" label="AGM_VI_LBL_TABELLE_BALLQUOTIENT"
+                       description="AGM_VI_DESC_TABELLE_BALLQUOTIENT">
+                    <option value="0">JNO</option>
+                    <option value="1">JYES</option>
+                </field>
+                <field name="vi_tabelle_ballverhaeltnis" type="list" default="1" label="AGM_VI_LBL_TABELLE_BALLVERHAELTNIS"
+                       description="AGM_VI_DESC_TABELLE_BALLVERHAELTNIS">
+                    <option value="0">JNO</option>
+                    <option value="1">JYES</option>
+                </field>
+                <field name="vi_tabelle_satzquotient" type="list" default="1" label="AGM_VI_LBL_TABELLE_SATZQUOTIENT"
+                       description="AGM_VI_DESC_TABELLE_SATZQUOTIENT">
+                    <option value="0">JNO</option>
+                    <option value="1">JYES</option>
+                </field>
+                <field name="vi_tabelle_satzverhaeltnis" type="list" default="1" label="AGM_VI_LBL_TABELLE_SATZVERHAELTNIS"
+                       description="AGM_VI_DESC_TABELLE_SATZVERHAELTNIS">
+                    <option value="0">JNO</option>
+                    <option value="1">JYES</option>
+                </field>
+                <field name="vi_tabelle_punkte" type="list" default="1" label="AGM_VI_LBL_TABELLE_PUNKTE"
+                       description="AGM_VI_DESC_TABELLE_PUNKTE">
+                    <option value="0">JNO</option>
+                    <option value="1">JYES</option>
+                </field>
+            </fieldset>
+            <fieldset name="spielplan">
+                <field name="vi_title_spielplan" type="vititle" label="AGM_VI_TITEL_SPIELPLAN"></field>
+                <field name="vi_spielplan_anzeigemodus" type="list" default="0" label="AGM_VI_LBL_SPIELPLAN_ANZEIGEMODUS"
+                       description="AGM_VI_DESC_SPIELPLAN_ANZEIGEMODUS">
+                    <option value="0">AGM_VI_OPTION_SPIELPLAN_ALL</option>
+                    <option value="1">AGM_VI_OPTION_SPIELPLAN_OWN</option>
+                </field>
+            </fieldset>
+            <fieldset name="copyright">
+                <field name="vi_title_copyright" type="vititle" label="AGM_VI_TITEL_COPYRIGHT"></field>
+                <field name="vi_copyright" type="list" default="1" label="AGM_VI_LBL_COPYRIGHT"
+                       description="AGM_VI_DESC_COPYRIGHT">
+                    <option value="0">JNO</option>
+                    <option value="1">JYES</option>
+                </field>
+            </fieldset>
+        </fields>
+    </config>
 </extension>
