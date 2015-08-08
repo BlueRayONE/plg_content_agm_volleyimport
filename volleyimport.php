@@ -3,7 +3,7 @@
  * @package    volleyImport
  * @subpackage Base
  * @author     Alexander Grözinger {@link http://www.agmedia.de}
- * @author     Created on 07-Aug-2015
+ * @author     Created on 06-May-2015
  * @license    GNU/GPL
  */
 

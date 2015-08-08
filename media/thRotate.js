@@ -31,8 +31,8 @@ jQuery( document ).ready(function() {
             var th_first_rotated_child = table.find('th.rotate-45').first();
             var th_height = th_first_rotated_child.css('height').replace("px", "");
             var td_target = tr.find('td').last();
-            var td_target_width_padding = td_target.outerWidth() - td_target.width() - 1;
-            var td_target_width_after = th_height - td_target_width_padding;
+            var td_target_width_padding = td_target.outerWidth() - td_target.width();
+            var td_target_width_after = th_height - td_target_width_padding + 4;
 
             console.log('Hoehe: ' + th_height);
             console.log('Target B4: ' + td_target_width_padding);

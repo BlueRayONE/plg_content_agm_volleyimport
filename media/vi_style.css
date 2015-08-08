@@ -8,6 +8,7 @@
     padding-right: 2px;
     padding-top: 1px;
     padding-bottom: 1px;
+    vertical-align: middle;
 }
 
 /* STYLE WENN KEIN JQUERY UI STYLING BENUTZT WIRD */
@@ -28,6 +29,7 @@
 /* JQUERY UI STYLING & ROTATED HEADER STUFF */
 /* THEAD */
 .volleyImportContainer thead th {
+    text-align: center !important;
     padding: 4px 6px;
     /*border-left: 1px solid #dddddd;
     border-right: 1px solid #dddddd;*/
