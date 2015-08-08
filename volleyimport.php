@@ -416,9 +416,25 @@ class plgContentvolleyImport extends JPlugin
                                     break;
                             }
 
-                            if ($this->_vi_table_column_ballquotient) $table->td(round($row->plusbaelle / $row->minusbaelle, 2), 'text-center');
+                            if ($this->_vi_table_column_ballquotient) {
+                                $ballquotient = 0;
+                                if($row->plusbaelle > 0 AND $row->minusbaelle > 0) {
+                                    $ballquotient = $row->plusbaelle / $row->minusbaelle;
+                                }
+
+                                $table->td(round($ballquotient, 2), 'text-center');
+                            }
                             if ($this->_vi_table_column_ballverhaeltnis) $table->td($row->plusbaelle . ':' . $row->minusbaelle, 'text-center');
-                            if ($this->_vi_table_column_satzquotient) $table->td(round($row->plussaetze / $row->minussaetze, 2), 'text-center');
+
+                            if ($this->_vi_table_column_satzquotient) {
+                                $satzquotient = 0;
+                                if($row->plussaetze > 0 AND $row->minussaetze > 0) {
+                                    $satzquotient = $row->plussaetze / $row->minussaetze;
+                                }
+
+                                $table->td(round($satzquotient, 2), 'text-center');
+                            }
+
                             if ($this->_vi_table_column_satzverhaeltnis) $table->td($row->plussaetze . ':' . $row->minussaetze, 'text-center');
                             if ($this->_vi_table_column_punkte) $table->td($row->dppunkte, 'text-center');
                             $table->td('', '', 'width="0px"');
