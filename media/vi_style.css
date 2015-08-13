@@ -90,7 +90,7 @@
     position: absolute;
     /*left: -25px;*/ /*Because it looked good, but there is probably a mathematical link here as well*/
     bottom: 2px;
-    margin-left:3px;
+    /*margin-left:3px;*/
     display: inline-block;
     /*VIA JQUERY BERECHNET width: 85px;*/ /* 80 / cos(45) - 40 cos (45) = 85 where 80 is the height of the cell, 40 the width of the cell and 45 the transform angle*/
     text-align: left;
