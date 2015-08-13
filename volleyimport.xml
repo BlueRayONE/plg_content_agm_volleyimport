@@ -1,13 +1,13 @@
 <?xml version="1.0" encoding="utf-8"?>
 <extension type="plugin" version="3.[12345]" method="upgrade" group="content">
     <name>plg_content_agm_volleyimport</name>
-    <creationDate>08-Aug-2015</creationDate>
+    <creationDate>13-Aug-2015</creationDate>
     <author>Alexander Grözinger</author>
     <authorEmail>agr@agmedia.de</authorEmail>
     <authorUrl>http://www.agmedia.de</authorUrl>
     <copyright>AGMedia</copyright>
     <license>http://www.gnu.de/documents/gpl.de.html GPL v3</license>
-    <version>0.9.4</version>
+    <version>0.9.5</version>
     <description>PLG_CONTENT_AGM_VOLLEYIMPORT_XML_DESC</description>
 	<client>site</client>
     <updateservers>
