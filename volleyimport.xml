@@ -22,7 +22,6 @@
         <filename>index.html</filename>
         <filename>installer.script.php</filename>
         <filename plugin="volleyimport">volleyimport.php</filename>
-        <filename>volleyimport_CHANGELOG.php</filename>
     </files>
     <scriptfile>installer.script.php</scriptfile>
     <params/>
