@@ -170,19 +170,22 @@ class plgContentvolleyImport extends JPlugin
 
         ###Prüfen ob jQuery geladen ist
         //JHtml war in Joomla 2.5 noch nicht verfügbar. Klasse wird in VI mitgeliefert und muss hier registriert werden.
-        if ($version->RELEASE == '2.5') {
+        /*if ($version->RELEASE == '2.5') {
             $path = dirname(__FILE__) . DIRECTORY_SEPARATOR . 'libraries' . DIRECTORY_SEPARATOR . 'cms';
             if (method_exists('JLoader', 'registerPrefix')) {
                 JLoader::registerPrefix('J', $path);
                 $this->debug_to_console("Path registered");
             }
-        }
+        }*/
 
         //jQuery Laden
         JHtml::_('jquery.framework', true, true);
 
-        $this->_doc->addScript(JURI::base() . 'plugins/content/volleyimport/media/thRotate.js');
-        $this->_doc->addStyleSheet(JURI::base() . 'plugins/content/volleyimport/media/vi_style.css');
+        /*$this->_doc->addScript(JPATH_PLUGINS . '/content/volleyimport/media/thRotate.js');
+        $this->_doc->addStyleSheet(JURI::base() . 'plugins/content/volleyimport/media/vi_style.css');*/
+
+        $this->_doc->addScript(JURI::root(true) . '/plugins/content/volleyimport/media/thRotate.js');
+        $this->_doc->addStyleSheet(JURI::root(true). '/plugins/content/volleyimport/media/vi_style.css');
 
         //Stylesheet laden sofern er im Array der erlaubten Themes gefunden wird. Sonst Standard Stylesheet laden.
         if ($this->_vi_jqueryui_load AND in_array($this->_vi_jqueryui_theme, $this->_allowed_jqueryui_themes)) {
@@ -345,8 +348,13 @@ class plgContentvolleyImport extends JPlugin
                             ->th('Gast')
                             ->th('Ergebnis');
                         break;
-                    case "v": //Todo: Vorschau
-                        $table->th('Nr.');
+                    case "v":
+                        $table->th('Nr.')
+                            ->th('Datum')
+                            ->th('Hallenöffnung')
+                            ->th('Spielbeginn')
+                            ->th('Heim')
+                            ->th('Gast');
                         break;
                 }
 
@@ -358,7 +366,7 @@ class plgContentvolleyImport extends JPlugin
                 $i = 0;
                 foreach ($xml as $element => $row) {
                     //Wenn Anzeigemodus Spielplan und nur eigene Mannschaften angezeigt werden sollen, dann Prüfen ob diese Zeile geskippt werden muss
-                    if($anzeige == "s" AND $this->_vi_spielplan_anzeigemodus == 1 AND !$this->preg_match_array('/' . $this->_vi_verein . '/i', $row)) {
+                    if($anzeige == "s" AND $this->_vi_spielplan_anzeigemodus == 1 AND (!$this->preg_match_array('/' . $this->_vi_verein . '/i', $row->heim) AND !$this->preg_match_array('/' . $this->_vi_verein . '/i', $row->gast))) {
                         continue;
                     }
 
@@ -458,8 +466,13 @@ class plgContentvolleyImport extends JPlugin
                                 ->td($row->gast)
                                 ->td($row->sheim . ':' . $row->sgast . '<br>(' . $row->result . ')', 'text-center');
                             break;
-                        case "v": //TODO: Vorschau
-                            $table->td($row->nr, 'text-center');
+                        case "v":
+                            $table->td($row->nr, 'text-center')
+                                ->td($row->datum, 'text-center')
+                                ->td($row->hallenoeffnung, 'text-center')
+                                ->td($row->spielbeginn, 'text-center')
+                                ->td($row->heim)
+                                ->td($row->gast);
                             break;
                     }
                 }
