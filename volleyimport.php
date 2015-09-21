@@ -339,10 +339,10 @@ class plgContentvolleyImport extends JPlugin
                         break;
                     case "s": //Spielplan
                         $table->th('Nr.')
-                            ->th('Spieltag')
+                            ->th('S.tag')
                             ->th('Datum')
-                            ->th('Hallenöffnung')
-                            ->th('Spielbeginn')
+                            ->th('HÖ')
+                            ->th('SB')
                             ->th('Halle')
                             ->th('Heim')
                             ->th('Gast')
