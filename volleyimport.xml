@@ -7,7 +7,7 @@
     <authorUrl>http://www.agmedia.de</authorUrl>
     <copyright>AGMedia</copyright>
     <license>http://www.gnu.de/documents/gpl.de.html GPL v3</license>
-    <version>0.9.5</version>
+    <version>0.9.6</version>
     <description>PLG_CONTENT_AGM_VOLLEYIMPORT_XML_DESC</description>
 	<client>site</client>
     <updateservers>
