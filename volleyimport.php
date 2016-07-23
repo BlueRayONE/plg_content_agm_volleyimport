@@ -208,7 +208,7 @@ class plgContentvolleyImport extends JPlugin
     {
 
         //Definiere Regex für {volleyImport|2012|146|2} - {vlwImport|Saison|StaffelID|Anzeige} wobei bei Saison 2011/2012 das hintere Jahr benutzt wird
-        $regex = '/{volleyImport\|([0-9]{4})\|([0-9]{1,3})\|([etsv]{1})(?![0-9a-z])(.*)}/';
+        $regex = '/{volleyImport\|([0-9]{4})\|([0-9]{1,4})\|([etsv]{1})(?![0-9a-z])(.*)}/';
         //$regex_params = '/([a-z]*=[a-z]*)*/'; //abc=def
 
         //Alle Uebereinstimmungen finden und in $matches speichern
@@ -233,11 +233,13 @@ class plgContentvolleyImport extends JPlugin
                 'spielplan' => $this->_vi_stream . 'spielplan_' . $saison . '_' . $staffelID . '.xml'
             );
 
+	        $url_not_reachable = false;
             foreach ($stream_url as $key => $url) {
                 $headers = get_headers($url);
                 $is_url = is_array($headers) ? preg_match('/^HTTP\/\d+\.\d+\s+2\d\d\s+.*$/', $headers[0]) : false;
                 if (!$is_url) {
                     JError::raiseWarning(100, JText::_('AGM_VI_URLNOTREACHABLE'));
+					$url_not_reachable = true;
                 }
             }
 
@@ -248,250 +250,252 @@ class plgContentvolleyImport extends JPlugin
                 $params_matched = $this->array_filter_recursive($params_matched);
             }*/
 
-            //Start Output
-            $output = '<div class="volleyImportContainer table-responsive">';
+	        if($url_not_reachable == false) {
+//Start Output
+		        $output = '<div class="volleyImportContainer table-responsive">';
 
-            $element_to_search_for_highlighting = array();
-            $xml_stream = '';
-            switch ($anzeige) {
-                case "e": //Ergebnis           
-                    $xml_stream = $stream_url['ergebnis'];
-                    break;
-                case "s": //Spielplan
-                    $xml_stream = $stream_url['spielplan'];
-                    break;
-                case "v": //Vorschau
-                    $xml_stream = $stream_url['vorschau'];
-                    break;
-                case "t": //Tabelle           
-                default:
-                    $xml_stream = $stream_url['tabelle'];
-                    break;
-            }
+		        $element_to_search_for_highlighting = array();
+		        $xml_stream = '';
+		        switch ($anzeige) {
+			        case "e": //Ergebnis
+				        $xml_stream = $stream_url['ergebnis'];
+				        break;
+			        case "s": //Spielplan
+				        $xml_stream = $stream_url['spielplan'];
+				        break;
+			        case "v": //Vorschau
+				        $xml_stream = $stream_url['vorschau'];
+				        break;
+			        case "t": //Tabelle
+			        default:
+				        $xml_stream = $stream_url['tabelle'];
+				        break;
+		        }
 
-            ###Generate DATA set for Tabelle
-            $context = stream_context_create(array('http' => array('header' => 'Accept: application/xml')));
-            $xml = file_get_contents($xml_stream, false, $context);
-            $xml = simplexml_load_string($xml);
-            $xml_has_content = (count($xml) > 0) ? true : false;
-            //$this->debug_to_console("XML HAVE CONTENT: ". $xml_has_content);
+		        ###Generate DATA set for Tabelle
+		        $context = stream_context_create(array('http' => array('header' => 'Accept: application/xml')));
+		        $xml = file_get_contents($xml_stream, false, $context);
+		        $xml = simplexml_load_string($xml);
+		        $xml_has_content = (count($xml) > 0) ? true : false;
+		        //$this->debug_to_console("XML HAVE CONTENT: ". $xml_has_content);
 
-            if ($xml_has_content) {
-                //Generate HTML Element Container
-                $table = new STable();
-                $table->id = 'vi_table_' . $this->_table_id;
-                $table->border = 0;
-                $table->cellpadding = 0;
-                $table->cellspacing = 0;
+		        if ($xml_has_content) {
+			        //Generate HTML Element Container
+			        $table = new STable();
+			        $table->id = 'vi_table_' . $this->_table_id;
+			        $table->border = 0;
+			        $table->cellpadding = 0;
+			        $table->cellspacing = 0;
 
-                $table_class_extension = ($anzeige == "t") ? ' table-header-rotated' : '';
-                $table_class_jqueryui = ($this->_vi_jqueryui_load) ? ' ui-widget' : 'vi_basic';
+			        $table_class_extension = ($anzeige == "t") ? ' table-header-rotated' : '';
+			        $table_class_jqueryui = ($this->_vi_jqueryui_load) ? ' ui-widget' : 'vi_basic';
 
-                $table->class = $table_class_jqueryui . $table_class_extension;
-                $table->width = "100%";
-
-
-                //Tabellenheader aufbauen
-                $thead_class_jqueryui = ($this->_vi_jqueryui_load) ? ' ui-widget-header' : '';
-                $table->thead($thead_class_jqueryui);
-                switch ($anzeige) {
-                    case "t": //Tabelle
-                        $table->th('#')
-                            ->th('Verein');
-                        if ($this->_vi_table_column_spiele) $table->thRotate('Spiele');
-                        if ($this->_vi_table_column_siege) $table->thRotate('Siege');
-                        if ($this->_vi_table_column_niederlagen) $table->thRotate('Niederlagen');
-
-                        switch ($this->_vi_table_column_siege_niederl_detail) {
-                            case 0:
-                                break;
-                            case 1:
-                                $table->thRotate('3:0 / 3:1')
-                                    ->thRotate('3:2')
-                                    ->thRotate('2:3')
-                                    ->thRotate('1:3 / 0:3');
-                                break;
-                            case 2:
-                            default:
-                                $table->thRotate('3:0')
-                                    ->thRotate('3:1')
-                                    ->thRotate('3:2')
-                                    ->thRotate('2:3')
-                                    ->thRotate('1:3')
-                                    ->thRotate('0:3');
-                                break;
-                        }
-
-                        if ($this->_vi_table_column_ballquotient) $table->thRotate('Ballquotient');
-                        if ($this->_vi_table_column_ballverhaeltnis) $table->thRotate('Ballverhältnis');
-                        if ($this->_vi_table_column_satzquotient) $table->thRotate('Satzquotient');
-                        if ($this->_vi_table_column_satzverhaeltnis) $table->thRotate('Satzverhältnis');
-                        if ($this->_vi_table_column_punkte) $table->thRotate('Punkte');
-                        $table->th('');
-                        break;
-                    case "e": //Ergebnis
-                        $table->th('Nr.')
-                            ->th('Datum')
-                            ->th('Spielbeginn')
-                            ->th('Heim')
-                            ->th('Gast')
-                            ->th('Ergebnis');
-                        break;
-                    case "s": //Spielplan
-                        $table->th('Nr.')
-                            ->th('S.tag')
-                            ->th('Datum')
-                            ->th('HÖ')
-                            ->th('SB')
-                            ->th('Halle')
-                            ->th('Heim')
-                            ->th('Gast')
-                            ->th('Ergebnis');
-                        break;
-                    case "v":
-                        $table->th('Nr.')
-                            ->th('Datum')
-                            ->th('Hallenöffnung')
-                            ->th('Spielbeginn')
-                            ->th('Heim')
-                            ->th('Gast');
-                        break;
-                }
+			        $table->class = $table_class_jqueryui . $table_class_extension;
+			        $table->width = "100%";
 
 
-                //Tabellenbody aufbauen
-                $tbody_class_jqueryui = ($this->_vi_jqueryui_load) ? ' ui-widget-content' : '';
-                $table->tbody($tbody_class_jqueryui);
+			        //Tabellenheader aufbauen
+			        $thead_class_jqueryui = ($this->_vi_jqueryui_load) ? ' ui-widget-header' : '';
+			        $table->thead($thead_class_jqueryui);
+			        switch ($anzeige) {
+				        case "t": //Tabelle
+					        $table->th('#')
+						        ->th('Verein');
+					        if ($this->_vi_table_column_spiele) $table->thRotate('Spiele');
+					        if ($this->_vi_table_column_siege) $table->thRotate('Siege');
+					        if ($this->_vi_table_column_niederlagen) $table->thRotate('Niederlagen');
 
-                $i = 0;
-                foreach ($xml as $element => $row) {
-                    //Wenn Anzeigemodus Spielplan und nur eigene Mannschaften angezeigt werden sollen, dann Prüfen ob diese Zeile geskippt werden muss
-                    if($anzeige == "s" AND $this->_vi_spielplan_anzeigemodus == 1 AND (!$this->preg_match_array('/' . $this->_vi_verein . '/i', $row->heim) AND !$this->preg_match_array('/' . $this->_vi_verein . '/i', $row->gast))) {
-                        continue;
-                    }
+					        switch ($this->_vi_table_column_siege_niederl_detail) {
+						        case 0:
+							        break;
+						        case 1:
+							        $table->thRotate('3:0 / 3:1')
+								        ->thRotate('3:2')
+								        ->thRotate('2:3')
+								        ->thRotate('1:3 / 0:3');
+							        break;
+						        case 2:
+						        default:
+							        $table->thRotate('3:0')
+								        ->thRotate('3:1')
+								        ->thRotate('3:2')
+								        ->thRotate('2:3')
+								        ->thRotate('1:3')
+								        ->thRotate('0:3');
+							        break;
+					        }
 
-                    //Class Attribut für TR-Zeile ermitteln. Spezialfall "Highlighting" berücksichtigen.
-                    //TODO: Highlighting Klasse wenn JQUERYUI nicht benutzt wird
-                    $class_tr = '';
-                    if ($this->_vi_alternating_rows) {
-                        $class_alternating = ($this->_vi_jqueryui_load) ? ' ui-state-default' : ' alternate';
-                        $class_tr = ($i % 2) ? $class_alternating : '';
-                    }
-                    $i++;
+					        if ($this->_vi_table_column_ballquotient) $table->thRotate('Ballquotient');
+					        if ($this->_vi_table_column_ballverhaeltnis) $table->thRotate('Ballverhältnis');
+					        if ($this->_vi_table_column_satzquotient) $table->thRotate('Satzquotient');
+					        if ($this->_vi_table_column_satzverhaeltnis) $table->thRotate('Satzverhältnis');
+					        if ($this->_vi_table_column_punkte) $table->thRotate('Punkte');
+					        $table->th('');
+					        break;
+				        case "e": //Ergebnis
+					        $table->th('Nr.')
+						        ->th('Datum')
+						        ->th('Spielbeginn')
+						        ->th('Heim')
+						        ->th('Gast')
+						        ->th('Ergebnis');
+					        break;
+				        case "s": //Spielplan
+					        $table->th('Nr.')
+						        ->th('S.tag')
+						        ->th('Datum')
+						        ->th('HÖ')
+						        ->th('SB')
+						        ->th('Halle')
+						        ->th('Heim')
+						        ->th('Gast')
+						        ->th('Ergebnis');
+					        break;
+				        case "v":
+					        $table->th('Nr.')
+						        ->th('Datum')
+						        ->th('Hallenöffnung')
+						        ->th('Spielbeginn')
+						        ->th('Heim')
+						        ->th('Gast');
+					        break;
+			        }
 
-                    //Prüfen ob die Zeile gehighlightet werden muss. Wenn Anzeigemodus Spielplan und nur eigene dann highlighing überspringen
-                    if ($this->_vi_highlight && !empty($this->_vi_verein)) {
-                        if ($this->preg_match_array('/' . $this->_vi_verein . '/i', $row)) {
-                            if($this->_vi_jqueryui_load) {
-                                $class_tr = 'ui-state-highlight';
-                            } else {
-                                $class_tr = 'highlight';
-                            }
-                        }
-                    }
 
-                    if($anzeige == "s" AND $this->_vi_spielplan_anzeigemodus == "1") {
-                        $class_tr = '';
-                    }
+			        //Tabellenbody aufbauen
+			        $tbody_class_jqueryui = ($this->_vi_jqueryui_load) ? ' ui-widget-content' : '';
+			        $table->tbody($tbody_class_jqueryui);
 
-                    //Tabellenzeilen aufbauen
-                    $table->tr($class_tr);
-                    switch ($anzeige) {
-                        case "t": //Tabelle
-                            $table->td($row->platz, 'text-center')
-                                ->td($row->team);
-                            if ($this->_vi_table_column_spiele) $table->td($row->spiele, 'text-center');
-                            if ($this->_vi_table_column_siege) $table->td($row->dpsiege, 'text-center');
-                            if ($this->_vi_table_column_niederlagen) $table->td($row->dpniederlagen, 'text-center');
+			        $i = 0;
+			        foreach ($xml as $element => $row) {
+				        //Wenn Anzeigemodus Spielplan und nur eigene Mannschaften angezeigt werden sollen, dann Prüfen ob diese Zeile geskippt werden muss
+				        if($anzeige == "s" AND $this->_vi_spielplan_anzeigemodus == 1 AND (!$this->preg_match_array('/' . $this->_vi_verein . '/i', $row->heim) AND !$this->preg_match_array('/' . $this->_vi_verein . '/i', $row->gast))) {
+					        continue;
+				        }
 
-                            switch ($this->_vi_table_column_siege_niederl_detail) {
-                                case 0:
-                                    break;
-                                case 1:
-                                    $table->td($row->dpgewinn30 + $row->dpgewinn31, 'text-center')
-                                        ->td($row->dpgewinn32, 'text-center')
-                                        ->td($row->dpniederlage23, 'text-center')
-                                        ->td($row->dpniederlage13 + $row->dpniederlage03, 'text-center');
-                                    break;
-                                case 2:
-                                default:
-                                    $table->td($row->dpgewinn30, 'text-center')
-                                        ->td($row->dpgewinn31, 'text-center')
-                                        ->td($row->dpgewinn32, 'text-center')
-                                        ->td($row->dpniederlage23, 'text-center')
-                                        ->td($row->dpniederlage13, 'text-center')
-                                        ->td($row->dpniederlage03, 'text-center');
-                                    break;
-                            }
+				        //Class Attribut für TR-Zeile ermitteln. Spezialfall "Highlighting" berücksichtigen.
+				        //TODO: Highlighting Klasse wenn JQUERYUI nicht benutzt wird
+				        $class_tr = '';
+				        if ($this->_vi_alternating_rows) {
+					        $class_alternating = ($this->_vi_jqueryui_load) ? ' ui-state-default' : ' alternate';
+					        $class_tr = ($i % 2) ? $class_alternating : '';
+				        }
+				        $i++;
 
-                            if ($this->_vi_table_column_ballquotient) {
-                                $ballquotient = 0;
-                                if($row->plusbaelle > 0 AND $row->minusbaelle > 0) {
-                                    $ballquotient = $row->plusbaelle / $row->minusbaelle;
-                                }
+				        //Prüfen ob die Zeile gehighlightet werden muss. Wenn Anzeigemodus Spielplan und nur eigene dann highlighing überspringen
+				        if ($this->_vi_highlight && !empty($this->_vi_verein)) {
+					        if ($this->preg_match_array('/' . $this->_vi_verein . '/i', $row)) {
+						        if($this->_vi_jqueryui_load) {
+							        $class_tr = 'ui-state-highlight';
+						        } else {
+							        $class_tr = 'highlight';
+						        }
+					        }
+				        }
 
-                                $table->td(round($ballquotient, 2), 'text-center');
-                            }
-                            if ($this->_vi_table_column_ballverhaeltnis) $table->td($row->plusbaelle . ':' . $row->minusbaelle, 'text-center');
+				        if($anzeige == "s" AND $this->_vi_spielplan_anzeigemodus == "1") {
+					        $class_tr = '';
+				        }
 
-                            if ($this->_vi_table_column_satzquotient) {
-                                $satzquotient = 0;
-                                if($row->plussaetze > 0 AND $row->minussaetze > 0) {
-                                    $satzquotient = $row->plussaetze / $row->minussaetze;
-                                }
+				        //Tabellenzeilen aufbauen
+				        $table->tr($class_tr);
+				        switch ($anzeige) {
+					        case "t": //Tabelle
+						        $table->td($row->platz, 'text-center')
+							        ->td($row->team);
+						        if ($this->_vi_table_column_spiele) $table->td($row->spiele, 'text-center');
+						        if ($this->_vi_table_column_siege) $table->td($row->dpsiege, 'text-center');
+						        if ($this->_vi_table_column_niederlagen) $table->td($row->dpniederlagen, 'text-center');
 
-                                $table->td(round($satzquotient, 2), 'text-center');
-                            }
+						        switch ($this->_vi_table_column_siege_niederl_detail) {
+							        case 0:
+								        break;
+							        case 1:
+								        $table->td($row->dpgewinn30 + $row->dpgewinn31, 'text-center')
+									        ->td($row->dpgewinn32, 'text-center')
+									        ->td($row->dpniederlage23, 'text-center')
+									        ->td($row->dpniederlage13 + $row->dpniederlage03, 'text-center');
+								        break;
+							        case 2:
+							        default:
+								        $table->td($row->dpgewinn30, 'text-center')
+									        ->td($row->dpgewinn31, 'text-center')
+									        ->td($row->dpgewinn32, 'text-center')
+									        ->td($row->dpniederlage23, 'text-center')
+									        ->td($row->dpniederlage13, 'text-center')
+									        ->td($row->dpniederlage03, 'text-center');
+								        break;
+						        }
 
-                            if ($this->_vi_table_column_satzverhaeltnis) $table->td($row->plussaetze . ':' . $row->minussaetze, 'text-center');
-                            if ($this->_vi_table_column_punkte) $table->td($row->dppunkte, 'text-center');
-                            $table->td('', '', 'width="0px"');
-                            break;
-                        case "e": //Ergebnis
-                            $table->td($row->nr, 'text-center')
-                                ->td($row->datum, 'text-center')
-                                ->td($row->spielbeginn, 'text-center')
-                                ->td($row->heim)
-                                ->td($row->gast)
-                                ->td($row->sheim . ':' . $row->sgast . '<br>(' . $row->result . ')', 'text-center');
-                            break;
-                        case "s": //Spielplan
-                            $table->td($row->nr, 'text-center')
-                                ->td($row->spieltag, 'text-center')
-                                ->td($row->datum, 'text-center')
-                                ->td($row->hallenoeffnung, 'text-center')
-                                ->td($row->spielbeginn, 'text-center')
-                                ->td($row->halle)
-                                ->td($row->heim)
-                                ->td($row->gast)
-                                ->td($row->sheim . ':' . $row->sgast . '<br>(' . $row->result . ')', 'text-center');
-                            break;
-                        case "v":
-                            $table->td($row->nr, 'text-center')
-                                ->td($row->datum, 'text-center')
-                                ->td($row->hallenoeffnung, 'text-center')
-                                ->td($row->spielbeginn, 'text-center')
-                                ->td($row->heim)
-                                ->td($row->gast);
-                            break;
-                    }
-                }
+						        if ($this->_vi_table_column_ballquotient) {
+							        $ballquotient = 0;
+							        if($row->plusbaelle > 0 AND $row->minusbaelle > 0) {
+								        $ballquotient = $row->plusbaelle / $row->minusbaelle;
+							        }
 
-                $output .= $table->getTable();
+							        $table->td(round($ballquotient, 2), 'text-center');
+						        }
+						        if ($this->_vi_table_column_ballverhaeltnis) $table->td($row->plusbaelle . ':' . $row->minusbaelle, 'text-center');
 
-                $this->_table_id++;
-            } else { //endif xml_have_content
-                $output .= "Keine Daten verfügbar";
-            }
-            $output .= '</div><!-- END #volleyImportContainer -->';
+						        if ($this->_vi_table_column_satzquotient) {
+							        $satzquotient = 0;
+							        if($row->plussaetze > 0 AND $row->minussaetze > 0) {
+								        $satzquotient = $row->plussaetze / $row->minussaetze;
+							        }
 
-            //Copyright Verlinkung zum Plugin-Autor. Bitte nicht löschen. Kann in den Plugineinstellungen deaktiviert werden. Würde mich dann über eine Erwähnung an anderer Stelle oder Spende sehr freuen.
-            if($anz_matches == $i_foreach AND $this->_vi_copyright) $output .= '<div id="volleyImportAuthor" style="padding: 10px 0; font-size: 11px;"><p style="float: right;">Datenaufbereitung: <a href="http://www.agmedia.de" title="volleyImport - AGMedia Joomla! Extensions" target="_blank">volleyImport</a></p></div>';
+							        $table->td(round($satzquotient, 2), 'text-center');
+						        }
 
-            //Tabelle an entsprechender Position einfügen
-            $article->text = str_replace($elm[0], $output, $article->text); //preg_replace($regex, $output, $article->text,1);
+						        if ($this->_vi_table_column_satzverhaeltnis) $table->td($row->plussaetze . ':' . $row->minussaetze, 'text-center');
+						        if ($this->_vi_table_column_punkte) $table->td($row->dppunkte, 'text-center');
+						        $table->td('', '', 'width="0px"');
+						        break;
+					        case "e": //Ergebnis
+						        $table->td($row->nr, 'text-center')
+							        ->td($row->datum, 'text-center')
+							        ->td($row->spielbeginn, 'text-center')
+							        ->td($row->heim)
+							        ->td($row->gast)
+							        ->td($row->sheim . ':' . $row->sgast . '<br>(' . $row->result . ')', 'text-center');
+						        break;
+					        case "s": //Spielplan
+						        $table->td($row->nr, 'text-center')
+							        ->td($row->spieltag, 'text-center')
+							        ->td($row->datum, 'text-center')
+							        ->td($row->hallenoeffnung, 'text-center')
+							        ->td($row->spielbeginn, 'text-center')
+							        ->td($row->halle)
+							        ->td($row->heim)
+							        ->td($row->gast)
+							        ->td($row->sheim . ':' . $row->sgast . '<br>(' . $row->result . ')', 'text-center');
+						        break;
+					        case "v":
+						        $table->td($row->nr, 'text-center')
+							        ->td($row->datum, 'text-center')
+							        ->td($row->hallenoeffnung, 'text-center')
+							        ->td($row->spielbeginn, 'text-center')
+							        ->td($row->heim)
+							        ->td($row->gast);
+						        break;
+				        }
+			        }
 
-            $i_foreach++;
+			        $output .= $table->getTable();
+
+			        $this->_table_id++;
+		        } else { //endif xml_have_content
+			        $output .= "Keine Daten verfügbar";
+		        }
+		        $output .= '</div><!-- END #volleyImportContainer -->';
+
+		        //Copyright Verlinkung zum Plugin-Autor. Bitte nicht löschen. Kann in den Plugineinstellungen deaktiviert werden. Würde mich dann über eine Erwähnung an anderer Stelle oder Spende sehr freuen.
+		        if($anz_matches == $i_foreach AND $this->_vi_copyright) $output .= '<div id="volleyImportAuthor" style="padding: 10px 0; font-size: 11px;"><p style="float: right;">Datenaufbereitung: <a href="http://www.agmedia.de" title="volleyImport - AGMedia Joomla! Extensions" target="_blank">volleyImport</a></p></div>';
+
+		        //Tabelle an entsprechender Position einfügen
+		        $article->text = str_replace($elm[0], $output, $article->text); //preg_replace($regex, $output, $article->text,1);
+
+		        $i_foreach++;
+	        } //url not reachable
         } //end of preg_match_all
 
 
