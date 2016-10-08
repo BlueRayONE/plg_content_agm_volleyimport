@@ -33,6 +33,7 @@
                        description="AGM_VI_DESC_VERBAND">
                     <option value="0">VLW (Volleyball Landesverband Württemberg)</option>
                     <option value="1">TVV (Thüringer Volleyball Verband)</option>
+                    <option value="2">WVV (Westdeutscher Volleyball Verband)</option>
                 </field>
                 <field name="vi_title_verein" type="vititle" label="AGM_VI_TITEL_VEREIN"></field>
                 <field name="vi_highlight" type="list" default="1" label="AGM_VI_LBL_HIGHLIGHT"

@@ -166,6 +166,9 @@ class plgContentvolleyImport extends JPlugin
             case 1:
                 $this->_vi_stream = 'https://tvv.it4sport.de/data/vbth/aufsteiger/public/';
                 break;
+            case 2:
+                $this->_vi_stream = 'https://wvv.it4sport.de/data/vbnw/aufsteiger/public/';
+                break;
         }
 
         ###Prüfen ob jQuery geladen ist
